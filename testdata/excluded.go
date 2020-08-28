@@ -1,3 +1,3 @@
 package tests
 
-// TODO This todo should be ignored as it is in the excluded path
+// TAG This tag should be ignored as it is in the excluded path

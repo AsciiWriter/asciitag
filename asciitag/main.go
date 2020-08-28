@@ -7,14 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/asticode/go-astitodo"
-	"github.com/asticode/go-astitools/flag"
+	"github.com/ojn/asciitag"
+	"github.com/ojn/asciitag/flag"
 )
 
 // Flags
 var (
-	assignees = flag.String("a", "", "Only TODOs assigned to this username(s) will be displayed")
-	format    = flag.String("f", "text", "Format to use when outputting TODOs (supported formats: text, csv, json)")
+	assignees = flag.String("a", "", "Only TAGs assigned to this username(s) will be displayed")
+	format    = flag.String("f", "text", "Format to use when outputting TAGs (supported formats: text, csv, json)")
 	output    = flag.String("o", "stdout", "Destination for output (can be stdout, stderr or a file)")
 	exclude   = astiflag.Strings{}
 )
@@ -27,15 +27,15 @@ func main() {
 	// Loop through paths
 	for _, path := range flag.Args() {
 		// Process path
-		var todos astitodo.TODOs
+		var tags asciitag.TAGs
 		var err error
-		if todos, err = astitodo.Extract(path, exclude...); err != nil {
+		if tags, err = asciitag.Extract(path, exclude...); err != nil {
 			log.Fatal(err)
 		}
 
 		// Filter results for assignee
 		if *assignees != "" {
-			todos = todos.AssignedTo(strings.Split(*assignees, ",")...)
+			tags = tags.AssignedTo(strings.Split(*assignees, ",")...)
 		}
 
 		var writer io.Writer
@@ -57,15 +57,15 @@ func main() {
 		// Handle selected format
 		switch *format {
 		case "text":
-			if err = todos.WriteText(writer); err != nil {
+			if err = tags.WriteText(writer); err != nil {
 				log.Fatal(err)
 			}
 		case "csv":
-			if err = todos.WriteCSV(writer); err != nil {
+			if err = tags.WriteCSV(writer); err != nil {
 				log.Fatal(err)
 			}
 		case "json":
-			if err = todos.WriteJSON(writer); err != nil {
+			if err = tags.WriteJSON(writer); err != nil {
 				log.Fatal(err)
 			}
 		default:
